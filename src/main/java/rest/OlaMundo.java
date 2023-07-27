@@ -10,5 +10,7 @@ public class OlaMundo {
 
 		Response response = RestAssured.request(Method.GET, "http://restapi.wcaquino.me/ola");
 		System.out.println(response.getBody().asString());
+		System.out.println(response.statusCode());
+
 	}
 }
