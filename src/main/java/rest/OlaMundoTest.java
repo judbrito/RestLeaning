@@ -70,7 +70,7 @@ public class OlaMundoTest {
 		List<Integer> impares = asList(1, 3, 5, 7, 9);
 		Assert.assertThat(impares, hasSize(5));
 		Assert.assertThat(impares, contains(1, 3, 5, 7, 9));
-		Assert.assertThat(impares, containsInAnyOrder(1, 3, 5, 7, 9));
+		Assert.assertThat(impares, containsInAnyOrder(1, 3, 5, 9, 7));
 		Assert.assertThat(impares, hasItem(1));
 		Assert.assertThat(impares, hasItems(1, 5));
 		Assert.assertThat("Maria", is(not("João")));
