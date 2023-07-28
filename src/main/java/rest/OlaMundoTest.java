@@ -1,9 +1,20 @@
 package rest;
 
 import static io.restassured.RestAssured.given;
+import static java.util.Arrays.asList;
+import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.anyOf;
+import static org.hamcrest.Matchers.contains;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.containsString;
+import static org.hamcrest.Matchers.endsWith;
+import static org.hamcrest.Matchers.hasItem;
+import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.startsWith;
 
-import java.util.Arrays;
 import java.util.List;
 
 import org.hamcrest.Matchers;
@@ -50,14 +61,21 @@ public class OlaMundoTest {
 
 	@Test
 	public void devoConhecerMatchersHamcrest() {
-		Assert.assertThat("Maria", Matchers.is("MAria"));
+		Assert.assertThat("Maria", Matchers.is("Maria"));
 		Assert.assertThat(128, Matchers.is(128));
 		Assert.assertThat(128, Matchers.isA(Integer.class));
-		Assert.assertThat(128, Matchers.isA(Double.class));
-		Assert.assertThat(128d, Matchers.greaterThan(128d));
-		Assert.assertThat(128d, Matchers.lessThan(120d));
+		Assert.assertThat(128d, Matchers.greaterThan(120d));
+		Assert.assertThat(128d, Matchers.lessThan(130d));
 
-		List<Integer> impares = Arrays.asList(1, 3, 5, 7, 9);
+		List<Integer> impares = asList(1, 3, 5, 7, 9);
 		Assert.assertThat(impares, hasSize(5));
+		Assert.assertThat(impares, contains(1, 3, 5, 7, 9));
+		Assert.assertThat(impares, containsInAnyOrder(1, 3, 5, 7, 9));
+		Assert.assertThat(impares, hasItem(1));
+		Assert.assertThat(impares, hasItems(1, 5));
+		Assert.assertThat("Maria", is(not("João")));
+		Assert.assertThat("Maria", not("João"));
+		Assert.assertThat("Joaquina", anyOf(is("Maria"), is("Joaquina")));
+		Assert.assertThat("joaquina", allOf(startsWith("joa"), endsWith("ina"), containsString("qui")));
 	}
 }
