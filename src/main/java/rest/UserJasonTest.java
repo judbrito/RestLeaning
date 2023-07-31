@@ -1,12 +1,15 @@
 package rest;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
+
+import java.util.Arrays;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -67,4 +70,11 @@ public class UserJasonTest {
 
 	}
 
+	@Test
+	public void deveVerificarListaRaiz() {
+		given().when().get("https://restapi.wcaquino.me/users").then().statusCode(200).body("$", hasSize(3))
+				.body("name", hasItems("João da Silva", "Maria Joaquina", "Ana Júlia")).body("age[1]", is(25))
+				.body("filhos.name", hasItem(Arrays.asList("Zezinho", "Luizinho")))
+				.body("salary", contains(1234.578f, 2500, null));
+	}
 }
