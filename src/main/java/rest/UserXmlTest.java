@@ -18,7 +18,7 @@ import io.restassured.internal.path.xml.NodeImpl;
 public class UserXmlTest {
 	// @Test
 	public void devoTrabalharComXml() {
-		given().when().get("https://restapi.wcaquino.me/usersXML/3").then().statusCode(200)
+		given().when().get("/usersXML/3").then().statusCode(200)
 				.body("user.name", is("Ana Julia")).body("user.@id", is("3")).body("user.filhos.name.size()", is(2))
 				.body("user.filhos.name[0]", is("Zezinho")).body("user.filhos.name[1]", is("Luizinho"))
 				.body("user.filhos.name", hasItem("Luizinho")).body("user.filhos.name", hasItems("Zezinho", "Luizinho"))
@@ -27,7 +27,7 @@ public class UserXmlTest {
 
 	// @Test
 	public void devoTrabalharComXmlExemplo2() {
-		given().when().get("https://restapi.wcaquino.me/usersXML/3").then().statusCode(200)
+		given().when().get("/usersXML/3").then().statusCode(200)
 
 				.rootPath("user").body(".name", is("Ana Julia")).body("@id", is("3"))
 
@@ -41,7 +41,7 @@ public class UserXmlTest {
 
 	// @Test
 	public void devoFazerPesquisasAvancadas() {
-		given().when().get("https://restapi.wcaquino.me/usersXML").then().statusCode(200)
+		given().when().get("/usersXML").then().statusCode(200)
 				.body("users.user.size()", is(3)).body("users.user.findAll{it.age.toInteger()<=25}.size()", is(2))
 				.body("users.user.@id", hasItems("1", "2", "3"))
 				.body("users.user.findAll{it.name.toString().contains('n')}.name",
@@ -52,7 +52,7 @@ public class UserXmlTest {
 
 	@Test
 	public void devoFazerPesquisasAvancadaComXmlEJava() {
-		ArrayList<NodeImpl> nomes = given().when().get("https://restapi.wcaquino.me/usersXML").then().statusCode(200)
+		ArrayList<NodeImpl> nomes = given().when().get("/usersXML").then().statusCode(200)
 				.extract().path("users.user.name.findAll{it.toString().contains('n')}");
 
 		Assert.assertEquals(2, nomes.size());
@@ -63,7 +63,7 @@ public class UserXmlTest {
 
 	@Test
 	public void devoFazerPesquisasAvancadaComXpath() {
-		given().when().get("https://restapi.wcaquino.me/usersXML").then().statusCode(200)
+		given().when().get("/usersXML").then().statusCode(200)
 				.body(hasXPath("count(/users/user)", is("3"))).body(hasXPath("/users/user[@id='1']"))
 				.body(hasXPath("//user[@id='2']"))
 				.body(hasXPath("//name[text()='Luizinho']/../../name", is("Ana Julia")))
@@ -71,9 +71,9 @@ public class UserXmlTest {
 						allOf(containsString("Zezinho"), containsString("Luizinho"))))
 				.body(hasXPath("/users/user/name", is("João da Silva"))).body(hasXPath("//name", is("João da Silva")))
 				.body(hasXPath("/users/user[2]/name", is("Maria Joaquina")))
-				.body(hasXPath("/users/user[lastName()]/name", is("Ana Julia	")))
+				.body(hasXPath("/users/user[last()]/name", is("Ana Julia")))
 				.body(hasXPath("count(/users/user[contains(.,'n')])", is("2")))
-				.body(hasXPath("//user[age<24]/name", is("Ana Julia	")))
+				.body(hasXPath("//user[age<24]/name", is("Ana Julia")))
 				.body(hasXPath("//user[age>24 and age <30]/name", is("Maria Joaquina")))
 				.body(hasXPath("//user[age>24][age <30]/name", is("Maria Joaquina")));
 	}
