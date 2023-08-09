@@ -19,7 +19,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
 import io.restassured.RestAssured;
@@ -28,14 +27,6 @@ import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
 
 public class UserJasonTest {
-
-	@BeforeClass
-	public static void setup() {
-
-		RestAssured.baseURI = "https://restapi.wcaquino.me";
-		// RestAssured.port= 443; se necessário para protocolo SSL.
-		// RestAssured.basePath=""; se necessário para complemento do endereço do json.
-	}
 
 	@Test
 	public void deveVerificarPrimeiroNivel() {
@@ -111,6 +102,7 @@ public class UserJasonTest {
 	public void deveUnirJsonPathComJava() {
 		ArrayList<String> names = given().when().get("/users").then().statusCode(200).extract()
 				.path("name.findAll{it.startsWith('Maria')}");
+
 		Assert.assertEquals(1, names.size());
 		Assert.assertTrue(names.get(0).equalsIgnoreCase("MariA Joaquina"));
 		Assert.assertEquals(names.get(0).toUpperCase(), "Maria Joaquina".toUpperCase());

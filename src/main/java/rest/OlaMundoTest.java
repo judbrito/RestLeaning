@@ -30,7 +30,7 @@ public class OlaMundoTest {
 
 	@Test
 	public void testOlaMundo() {
-		Response response = RestAssured.request(Method.GET, "http://restapi.wcaquino.me/ola");
+		Response response = RestAssured.request(Method.GET, "https://restapi.wcaquino.me/ola");
 		Assert.assertTrue(response.getBody().asString().equals("Ola Mundo!"));
 		Assert.assertTrue(response.statusCode() == 200);
 		Assert.assertTrue("estatus code não é  200", response.statusCode() == 200);
@@ -49,12 +49,12 @@ public class OlaMundoTest {
 		Assert.assertTrue(response.getBody().asString().equals("Ola Mundo!"));
 		ValidatableResponse validacao = response.then();
 		validacao.statusCode(200);
-		given().when().get("http://restapi.wcaquino.me/ola").then().statusCode(200);
+		given().when().get("https://restapi.wcaquino.me/ola").then().statusCode(200);
 	}
 
 	@Test
 	public void exemploTresDevoConhecer() {
-		RestAssured.get("http://restapi.wcaquino.me/ola").then().statusCode(200);
+		RestAssured.get("https://restapi.wcaquino.me/ola").then().statusCode(200);
 		System.out.println("uma linha codigo para verificar o status code");
 
 	}
@@ -81,7 +81,7 @@ public class OlaMundoTest {
 
 	@Test
 	public void devoValidarBody() {
-		given().when().get("http://restapi.wcaquino.me/ola").then().statusCode(200).body(is("Ola Mundo!"))
+		given().when().get("https://restapi.wcaquino.me/ola").then().statusCode(200).body(is("Ola Mundo!"))
 				.body(containsString("Ola"));
 	}
 }
