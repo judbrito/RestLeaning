@@ -47,4 +47,16 @@ public class VerbosTest {
 				.statusCode(200).body("id", is(1)).body("name", is("Usuario alterado")).body("age", is(80))
 				.body("salary", is(1234.5678f));
 	}
+
+	@Test
+	public void devoRemoverUsuario() {
+		given().log().all().when().delete("https://restapi.wcaquino.me/users/1").then().log().all().statusCode(204);
+	}
+
+	@Test
+	public void devoRemoverUsuarioInexistente() {
+		given().log().all().when().delete("https://restapi.wcaquino.me/users/1000").then().log().all().statusCode(400)
+				.and().body("error", is("Registro inexistente"));
+
+	}
 }
