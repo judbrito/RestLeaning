@@ -19,19 +19,42 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import io.restassured.RestAssured;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.builder.ResponseSpecBuilder;
+import io.restassured.filter.log.LogDetail;
 import io.restassured.http.Method;
 import io.restassured.path.json.JsonPath;
 import io.restassured.response.Response;
+import io.restassured.specification.RequestSpecification;
+import io.restassured.specification.ResponseSpecification;
 
 public class UserJasonTest {
+	public static RequestSpecification reqSpec;
+	public static ResponseSpecification resSpec;
+
+	@BeforeClass
+	public static void setup() {
+		RestAssured.baseURI = "https://restapi.wcaquino.me";
+		RequestSpecification reqSpec;
+		ResponseSpecification resSpec;
+
+		RequestSpecBuilder reqBuilder = new RequestSpecBuilder();
+		reqBuilder.log(LogDetail.ALL);
+		reqSpec = reqBuilder.build();
+
+		ResponseSpecBuilder resbuilder = new ResponseSpecBuilder();
+		resbuilder.expectStatusCode(2000); // Verificando status code 200 (Sucesso)
+		resSpec = resbuilder.build();
+	}
 
 	@Test
 	public void deveVerificarPrimeiroNivel() {
-		given().when().get("/users/1").then().statusCode(200).body("id", is(1)).body("name", containsString("Silva"))
-				.body("age", greaterThan(18));
+		given().when().get("/users/1").then().body("id", is(1)).body("name", containsString("Silva")).body("age",
+				greaterThan(18));
 	}
 
 	@Test
@@ -53,14 +76,14 @@ public class UserJasonTest {
 
 	@Test
 	public void deveVerificarSegundoNivel() {
-		given().when().get("/users/2").then().statusCode(200).body("name", containsString("Joaquina"))
-				.body("endereco.rua", is("Rua dos bobos"));
+		given().when().get("/users/2").then().body("name", containsString("Joaquina")).body("endereco.rua",
+				is("Rua dos bobos"));
 	}
 
 	@Test
 	public void deveVerificarLista() {
-		given().when().get("/users/3").then().statusCode(200).body("name", containsString("Ana"))
-				.body("filhos", hasSize(2)).body("filhos[0].name", is("Zezinho")).body("filhos[1].name", is("Luizinho"))
+		given().when().get("/users/3").then().body("name", containsString("Ana")).body("filhos", hasSize(2))
+				.body("filhos[0].name", is("Zezinho")).body("filhos[1].name", is("Luizinho"))
 				.body("filhos.name", hasItem("Zezinho")).body("filhos.name", hasItems("Zezinho", "Luizinho"));
 	}
 
@@ -71,7 +94,7 @@ public class UserJasonTest {
 
 	@Test
 	public void deveVerificarListaRaiz() {
-		given().when().get("/users").then().statusCode(200).body("$", hasSize(3))
+		given().when().get("/users").then().body("$", hasSize(3))
 				.body("name", hasItems("João da Silva", "Maria Joaquina", "Ana Júlia")).body("age[1]", is(25))
 				.body("filhos.name", hasItem(Arrays.asList("Zezinho", "Luizinho")))
 				.body("salary", contains(1234.5677f, 2500, null));
@@ -79,8 +102,8 @@ public class UserJasonTest {
 
 	@Test
 	public void deveVerificacoesAvancadas() {
-		given().when().get("/users").then().statusCode(200).body("$", hasSize(3))
-				.body("age.findAll{it<=25}.size()", is(2)).body("age.findAll{it<=25&&it>20}.size()", is(1))
+		given().when().get("/users").then().body("$", hasSize(3)).body("age.findAll{it<=25}.size()", is(2))
+				.body("age.findAll{it<=25&&it>20}.size()", is(1))
 				.body("findAll{it.age <=25 && it.age>20}.name", hasItem("Maria Joaquina"))
 				.body("findAll{it.age<=25}[0].name", is("Maria Joaquina"))
 				.body("findAll{it.age<=25}[-1].name", is("Ana Júlia"))
@@ -100,7 +123,7 @@ public class UserJasonTest {
 
 	@Test
 	public void deveUnirJsonPathComJava() {
-		ArrayList<String> names = given().when().get("/users").then().statusCode(200).extract()
+		ArrayList<String> names = given().when().get("/users").then().extract()
 				.path("name.findAll{it.startsWith('Maria')}");
 
 		Assert.assertEquals(1, names.size());

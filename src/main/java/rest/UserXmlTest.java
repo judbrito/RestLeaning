@@ -26,19 +26,17 @@ public class UserXmlTest {
 
 	@BeforeClass
 	public static void setup() {
-
 		RestAssured.baseURI = "https://restapi.wcaquino.me";
-		// RestAssured.port= 443; se necessário para protocolo SSL.
-		// RestAssured.basePath=""; se necessário para complemento do endereço do json.
 		RequestSpecification reqSpec;
 		ResponseSpecification resSpec;
+
 		RequestSpecBuilder reqBuilder = new RequestSpecBuilder();
 		reqBuilder.log(LogDetail.ALL);
 		reqSpec = reqBuilder.build();
-		ResponseSpecBuilder resbuilder = new ResponseSpecBuilder();
-		resbuilder.expectStatusCode(200);
-		resSpec = resbuilder.build();
 
+		ResponseSpecBuilder resbuilder = new ResponseSpecBuilder();
+		resbuilder.expectStatusCode(200); // Verificando status code 200 (Sucesso)
+		resSpec = resbuilder.build();
 	}
 
 	@Test
@@ -57,7 +55,7 @@ public class UserXmlTest {
 
 	@Test
 	public void devoTrabalharComXmlExemplo2() {
-		given().when().get("/usersXML/3").then().statusCode(200)
+		given().when().get("/usersXML/3").then()
 
 				.rootPath("user").body(".name", is("Ana Julia")).body("@id", is("3"))
 
@@ -71,7 +69,7 @@ public class UserXmlTest {
 
 	@Test
 	public void devoFazerPesquisasAvancadas() {
-		given().when().get("/usersXML").then().statusCode(200).body("users.user.size()", is(3))
+		given().when().get("/usersXML").then().body("users.user.size()", is(3))
 				.body("users.user.findAll{it.age.toInteger()<=25}.size()", is(2))
 				.body("users.user.@id", hasItems("1", "2", "3"))
 				.body("users.user.findAll{it.name.toString().contains('n')}.name",
@@ -82,7 +80,7 @@ public class UserXmlTest {
 
 	@Test
 	public void devoFazerPesquisasAvancadaComXmlEJava() {
-		ArrayList<NodeImpl> nomes = given().when().get("/usersXML").then().statusCode(200).extract()
+		ArrayList<NodeImpl> nomes = given().when().get("/usersXML").then().extract()
 				.path("users.user.name.findAll{it.toString().contains('n')}");
 
 		Assert.assertEquals(2, nomes.size());
@@ -93,7 +91,7 @@ public class UserXmlTest {
 
 	@Test
 	public void devoFazerPesquisasAvancadaComXpath() {
-		given().when().get("/usersXML").then().statusCode(200).body(hasXPath("count(/users/user)", is("3")))
+		given().when().get("/usersXML").then().body(hasXPath("count(/users/user)", is("3")))
 				.body(hasXPath("/users/user[@id='1']")).body(hasXPath("//user[@id='2']"))
 				.body(hasXPath("//name[text()='Luizinho']/../../name", is("Ana Julia")))
 				.body(hasXPath("//name[text()='Ana Julia']/following-sibling::filhos",

@@ -19,14 +19,37 @@ import java.util.List;
 
 import org.hamcrest.Matchers;
 import org.junit.Assert;
+import org.junit.BeforeClass;
 import org.junit.Test;
 
 import io.restassured.RestAssured;
+import io.restassured.builder.RequestSpecBuilder;
+import io.restassured.builder.ResponseSpecBuilder;
+import io.restassured.filter.log.LogDetail;
 import io.restassured.http.Method;
 import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
+import io.restassured.specification.RequestSpecification;
+import io.restassured.specification.ResponseSpecification;
 
 public class OlaMundoTest {
+	@BeforeClass
+	public static void setup() {
+
+		RestAssured.baseURI = "https://restapi.wcaquino.me";
+		// RestAssured.port= 443; se necessário para protocolo SSL.
+		// RestAssured.basePath=""; se necessário para complemento do endereço do json.
+		RequestSpecification reqSpec;
+		ResponseSpecification resSpec;
+
+		RequestSpecBuilder reqBuilder = new RequestSpecBuilder();
+		reqBuilder.log(LogDetail.ALL);
+		reqSpec = reqBuilder.build();
+		ResponseSpecBuilder resbuilder = new ResponseSpecBuilder();
+		resbuilder.expectStatusCode(200);
+		resSpec = resbuilder.build();
+
+	}
 
 	@Test
 	public void testOlaMundo() {
@@ -39,7 +62,6 @@ public class OlaMundoTest {
 		System.out.println(response.statusCode() == 200);
 
 		ValidatableResponse validacao = response.then();
-		validacao.statusCode(200);
 
 	}
 
