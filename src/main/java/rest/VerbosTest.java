@@ -13,7 +13,7 @@ import org.junit.Test;
 import io.restassured.http.ContentType;
 
 public class VerbosTest {
-	// @Test
+	@Test
 	public void devoSalvarUsuario() {
 		given().log().all().contentType("application/json").body("{\"name\":\"jose\",\"age\":50}").when()
 				.post("https://restapi.wcaquino.me/users").then().log().all().statusCode(201)
@@ -29,6 +29,15 @@ public class VerbosTest {
 		given().body(params).log().all().contentType("application/json").body("{\"name\":\"jose\",\"age\":50}").when()
 				.post("https://restapi.wcaquino.me/users").then().log().all().statusCode(201)
 				.body("id", is(notNullValue())).body("name", is("jose")).body("age", is(50));
+
+	}
+
+	@Test
+	public void devoSalvarUsuarioUsandoObject() {
+		Users user = new Users("Usuário via Objeto", 35);
+		given().body(user).log().all().contentType("application/json").when().post("https://restapi.wcaquino.me/users")
+				.then().log().all().statusCode(201).body("id", is(notNullValue()))
+				.body("name", is("Usuário via Objeto")).body("age", is(35));
 
 	}
 
