@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.commons.lang3.CharEncoding;
+import org.junit.Assert;
 import org.junit.Test;
 
 import io.restassured.http.ContentType;
@@ -39,6 +40,17 @@ public class VerbosTest {
 				.then().log().all().statusCode(201).body("id", is(notNullValue()))
 				.body("name", is("Usuário via Objeto")).body("age", is(35));
 
+	}
+
+	@Test
+	public void devoDeserializarAoSalvarUsuario() {
+		Users user = new Users("Usuário deserializado", 35);
+		Users usuarioInserido = given().body(user).log().all().contentType("application/json").when()
+				.post("https://restapi.wcaquino.me/users").then().log().all().statusCode(201).extract().body()
+				.as(Users.class);
+		Assert.assertThat(usuarioInserido.getId(), notNullValue());
+		Assert.assertEquals("Usuário deserializado", usuarioInserido.getName());
+		Assert.assertThat(usuarioInserido.getAge(), is(35));
 	}
 
 	@Test
