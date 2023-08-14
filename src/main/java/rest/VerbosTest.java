@@ -3,6 +3,7 @@ package rest;
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.hamcrest.Matchers.nullValue;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -64,10 +65,23 @@ public class VerbosTest {
 	@Test
 	public void devoSalvarUsuarioViaXmlUsandoObjeto() {
 		User user = new User("Usuário XML", 40);
-
 		given().log().all().contentType(ContentType.XML.withCharset(CharEncoding.UTF_8)).body(user).when()
 				.post("https://restapi.wcaquino.me/usersXML").then().log().all().statusCode(201)
 				.body("user.@id", is(notNullValue())).body("user.name", is("Usuário XML")).body("user.age", is("40"));
+	}
+
+	@Test
+	public void devoDeserializarXmlAoSalvarUsuario() {
+		User user = new User("Usuário XML", 40);
+
+		User usuarioInserido = given().log().all().contentType(ContentType.XML.withCharset(CharEncoding.UTF_8))
+				.body(user).when().post("https://restapi.wcaquino.me/usersXML").then().log().all().statusCode(201)
+				.extract().body().as(User.class);
+		Assert.assertThat(usuarioInserido.getId(), notNullValue());
+		Assert.assertThat(usuarioInserido.getName(), is("Usuário XML"));
+		Assert.assertThat(usuarioInserido.getAge(), is(40));
+		Assert.assertThat(usuarioInserido.getSalary(), nullValue());
+
 	}
 
 	@Test
