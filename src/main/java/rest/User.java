@@ -1,13 +1,23 @@
 package rest;
 
-public class Users {
-	private Long id;
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 
+@XmlRootElement(name = "user")
+@XmlAccessorType(XmlAccessType.FIELD)
+public class User {
+
+	private Long id;
 	private String name;
 	private Integer age;
 	private Double salary;
 
-	public Users(String name, Integer age) {
+	public User() {
+
+	}
+
+	public User(String name, Integer age) {
 		super();
 		this.name = name;
 		this.age = age;
@@ -47,7 +57,7 @@ public class Users {
 
 	@Override
 	public String toString() {
-		return "Users [id=" + id + ", name=" + name + ", age=" + age + ", salary=" + salary + "]";
+		return "User [id=" + id + ", name=" + name + ", age=" + age + ", salary=" + salary + "]";
 	}
 
 }

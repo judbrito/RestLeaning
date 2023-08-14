@@ -35,7 +35,7 @@ public class VerbosTest {
 
 	@Test
 	public void devoSalvarUsuarioUsandoObject() {
-		Users user = new Users("Usuário via Objeto", 35);
+		User user = new User("Usuário via Objeto", 35);
 		given().body(user).log().all().contentType("application/json").when().post("https://restapi.wcaquino.me/users")
 				.then().log().all().statusCode(201).body("id", is(notNullValue()))
 				.body("name", is("Usuário via Objeto")).body("age", is(35));
@@ -44,10 +44,10 @@ public class VerbosTest {
 
 	@Test
 	public void devoDeserializarAoSalvarUsuario() {
-		Users user = new Users("Usuário deserializado", 35);
-		Users usuarioInserido = given().body(user).log().all().contentType("application/json").when()
+		User user = new User("Usuário deserializado", 35);
+		User usuarioInserido = given().body(user).log().all().contentType("application/json").when()
 				.post("https://restapi.wcaquino.me/users").then().log().all().statusCode(201).extract().body()
-				.as(Users.class);
+				.as(User.class);
 		Assert.assertThat(usuarioInserido.getId(), notNullValue());
 		Assert.assertEquals("Usuário deserializado", usuarioInserido.getName());
 		Assert.assertThat(usuarioInserido.getAge(), is(35));
@@ -59,6 +59,15 @@ public class VerbosTest {
 				.body("<user><name>José</name><age>50</age></user>").log().all().when()
 				.post("https://restapi.wcaquino.me/usersXMl").then().log().all().statusCode(201)
 				.body("user.@id", is(notNullValue())).body("user.name", is("José")).body("user.age", is("50"));
+	}
+
+	@Test
+	public void devoSalvarUsuarioViaXmlUsandoObjeto() {
+		User user = new User("Usuário XML", 40);
+
+		given().log().all().contentType(ContentType.XML.withCharset(CharEncoding.UTF_8)).body(user).when()
+				.post("https://restapi.wcaquino.me/usersXML").then().log().all().statusCode(201)
+				.body("user.@id", is(notNullValue())).body("user.name", is("Usuário XML")).body("user.age", is("40"));
 	}
 
 	@Test
