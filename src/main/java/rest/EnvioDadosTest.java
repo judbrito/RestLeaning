@@ -1,6 +1,7 @@
 package rest;
 
 import static io.restassured.RestAssured.given;
+import static org.hamcrest.Matchers.containsString;
 
 import org.junit.Test;
 
@@ -11,5 +12,12 @@ public class EnvioDadosTest {
 	public void deveEnviarValorViaQuery() {
 		given().log().all().when().get("https://restapi.wcaquino.me/v2/users?format=json").then().log().all()
 				.statusCode(200).contentType(ContentType.JSON);
+	}
+
+	@Test
+	public void deveEnviarValorViaQueryViaParametros() {
+		given().log().all().queryParam("outra", "coisa").queryParam("format", "xml").when()
+				.get("https://restapi.wcaquino.me/v2/users").then().log().all().statusCode(200)
+				.contentType(ContentType.XML).contentType(containsString("utf-8"));
 	}
 }
