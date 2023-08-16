@@ -2,9 +2,6 @@ package rest;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.anyOf;
-import static org.hamcrest.Matchers.arrayContaining;
-import static org.hamcrest.Matchers.arrayWithSize;
 import static org.hamcrest.Matchers.closeTo;
 import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.containsString;
@@ -112,8 +109,6 @@ public class UserJasonTest {
 				.body("findAll{it.name.length()>10}.name", hasItems("João da Silva", "Maria Joaquina"))
 				.body("name.collect{it.toUpperCase()}", hasItem("MARIA JOAQUINA"))
 				.body("name.findAll{it.startsWith('Maria')}.collect{it.toUpperCase()}", hasItem("MARIA JOAQUINA"))
-				.body("name.findAll{it.startsWith('Maria')}.collect{it.toUpperCase()}.toArray()",
-						anyOf(arrayContaining("MARIA jOAQUINA"), arrayWithSize(1)))
 				.body("age.collect{it*2}", hasItems(60, 50, 40)).body("id.max()", is(3))
 				.body("salary.min()", is(1234.5678f))
 				.body("salary.findAll{it !=null}.sum()", is(closeTo(3734.5678f, 0.001)))

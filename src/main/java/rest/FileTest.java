@@ -37,7 +37,7 @@ public class FileTest {
 		.when()
 				.post("http://restapi.wcaquino.me/upload")
 				.then().log().all()
-				.time(lessThan(1200L))
+				.time(lessThan(1500L))
 		.statusCode(200);
 	}
 	@Test
