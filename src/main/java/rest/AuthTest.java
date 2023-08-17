@@ -2,9 +2,15 @@ package rest;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.greaterThan;
+import static org.hamcrest.Matchers.hasItem;
 import static org.hamcrest.Matchers.is;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.Test;
+
+import io.restassured.http.ContentType;
 
 public class AuthTest {
 	// endereço endpoint atualizada!
@@ -45,5 +51,29 @@ public class AuthTest {
 		given().log().all().auth().preemptive().basic("admin", "senha").when()
 				.get("https://restapi.wcaquino.me/basicauth2").then().log().all().statusCode(200)
 				.body("status", is("logado"));
+	}
+	//login brito@brito	senha 123456 conta criada judbrito
+	@Test
+	public void deveFazerAutenticaoComTokenJWT() {
+		Map<String, String> login = new HashMap<String, String>();
+		login.put("email","brito@brito");
+		login.put("senha","123456");
+		//login na api
+		//receber token
+	String token	= given().log().all()
+			.body(login)
+			.contentType(ContentType.JSON)
+			.when()
+				.post("http://barrigarest.wcaquino.me/signin")
+				.then().log().all().statusCode(200)
+				.extract().path("token");
+		
+		given().log().all()
+		.header("Authorization", "JWT "+token)
+		.when()
+			.get("http://barrigarest.wcaquino.me/contas")
+			.then().log().all().statusCode(200)
+		.body("nome", hasItem ("judbrito"));
+	
 	}
 }
