@@ -44,7 +44,7 @@ public class UserJasonTest {
 		reqSpec = reqBuilder.build();
 
 		ResponseSpecBuilder resbuilder = new ResponseSpecBuilder();
-		resbuilder.expectStatusCode(2000); // Verificando status code 200 (Sucesso)
+		resbuilder.expectStatusCode(200); // Verificando status code 200 (Sucesso)
 		resSpec = resbuilder.build();
 	}
 
